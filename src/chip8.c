@@ -138,10 +138,14 @@ void draw_sprite(uint16_t x, uint16_t y, uint16_t height) {
 		pixel = memory[cpu.I + yline];
 
 		for(int xline=0; xline<8; xline++) {
+			uint8_t posX = (x + xline) % SCREEN_WIDTH;
+			uint8_t posY = (y + yline) % SCREEN_HEIGHT;
+			uint16_t posPixel = (uint16_t)(posX + (posY * 64));
+
 			if((pixel & (0x80 >> xline)) != 0) {
-				if(gfx[(x + xline + ((y + yline) * 64))] == 1)
+				if(gfx[posPixel] == 1)
 					cpu.V[0xF] = 1;
-				gfx[x + xline + ((y + yline) * 64)] ^= 1;
+				gfx[posPixel] ^= 1;
 			}
 		}
 	}
