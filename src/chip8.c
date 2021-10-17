@@ -130,8 +130,8 @@ void cpu_debugger(void) {
 // 	}
 #endif
 
-void draw_sprite(uint16_t x, uint16_t y, uint16_t height) {
-	uint16_t pixel;
+void draw_sprite(uint8_t x, uint8_t y, uint8_t height) {
+	uint8_t pixel;
 
 	cpu.V[0xF] = 0;
 	for(int yline=0; yline<height; yline++) {
