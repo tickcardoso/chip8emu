@@ -10,3 +10,7 @@ Feel free to clone this repository for the purpose of studying the code.
 ## Missing features
 
 - Audio
+
+## How to install
+
+The only build requirements are **SDL** and **NCurses** libraries. To build for Unix-like systems, simply run `make` on the terminal. It wasn't tested on Windows.
