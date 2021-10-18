@@ -44,6 +44,8 @@ int main(int argc, char *argv[]) {
 
 #ifdef CHIP8_DBG
 		cpu_debugger();
+		refresh();
+		erase();
 #endif
 
 		while(SDL_PollEvent(&event)) {

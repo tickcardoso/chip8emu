@@ -86,15 +86,15 @@ void load_game(const char *n_game) {
 }
 
 #ifdef CHIP8_DBG
-// 	void mem_dbg(size_t n) {
-// 		size_t i;
-//
-// 		for(i=n; i<=MEM_SIZE; i++)
-// 			printf("%02X ", memory[i]);
-//
-// 		putchar('\n');
-// 	}
-//
+void mem_debugger(size_t n) {
+	size_t i;
+
+	for(i=n; i<=MEM_SIZE; i++)
+		printw("%02X ", memory[i]);
+
+	addch('\n');
+}
+
 /* Views processor registers */
 void cpu_debugger(void) {
 	uint16_t next_op = memory[cpu.pc] << 8 | memory[cpu.pc + 1];
@@ -113,21 +113,20 @@ void cpu_debugger(void) {
 	printw("PC: 0x%02X\tsp: 0x%X\n", cpu.pc, cpu.sp);
 	printw("I : 0x%02X\n", cpu.I);
 	printw("op: 0x%02X\tNext op.: 0x%02X\n", cpu.opcode, next_op);
-
-	refresh();
-	erase();
 }
-//
-// 	void gfx_dbg(void) {
-// 		for(size_t i=0,j=0; i<SCREEN_WIDTH * SCREEN_HEIGHT; i++,j++) {
-// 			if(j == SCREEN_WIDTH) {
-// 				putchar('\n');
-// 				j = 0;
-// 			}
-// 			printf("%x", gfx[i]);
-// 		}
-// 		putchar('\n');
-// 	}
+
+void gfx_debugger(void) {
+	for(size_t i=0,j=0; i<SCREEN_WIDTH * SCREEN_HEIGHT; i++,j++) {
+		if(j == SCREEN_WIDTH) {
+			addch('\n');
+			j = 0;
+		}
+		if(gfx[i] == 0)
+			addch(' ');
+		else
+			printw("%x", gfx[i]);
+	}
+}
 #endif
 
 void draw_sprite(uint8_t x, uint8_t y, uint8_t height) {
