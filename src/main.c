@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
-#include <ncurses.h>
 #include "chip8.h"
 
-//#undef CHIP8_DBG
+#ifdef DEBUG
+	#include "chip8_dbg.h"
+#endif
 
 #define L_WIDTH 1024
 #define L_HEIGHT 512
@@ -14,46 +15,42 @@ SDL_Renderer *renderer = NULL;
 SDL_Texture *texture = NULL;
 SDL_Event event;
 
-void setup_ncurses(void);
 void setup_graphics(void);
 void key_down(SDL_Event *event);
 void key_up(SDL_Event *event);
 void setup_audio(void);
 void update_screen(void);
-void free_resources(void);
-
-bool quit = false;
 
 int main(int argc, char *argv[]) {
-	if(argc < 2) {
+	bool quit = false;
+
+	if(argc != 2) {
 		printf("Usage: %s rom_file\n", argv[0]);
-		exit(1);
+		exit(10);
 	}
 
-	initialize_chip8();
+	init_chip8();
 
-	load_game(argv[argc-1]);
+	load_rom(argv[argc-1]);
 
-	setup_ncurses();
+	init_debug();
 	setup_graphics();
 	setup_audio();
 
 	// Main loop
 	while(!quit) {
 		emulate_cycle();
-
-#ifdef CHIP8_DBG
 		cpu_debugger();
-		refresh();
-		erase();
-#endif
 
 		while(SDL_PollEvent(&event)) {
 			if(event.type == SDL_QUIT)
 				quit = true;
 			else
-				if(event.type == SDL_KEYDOWN)
+				if(event.type == SDL_KEYDOWN) {
 					key_down(&event);
+					if(event.key.keysym.sym == SDLK_ESCAPE)
+						quit = true;
+				}
 				else
 					if(event.type == SDL_KEYUP)
 						key_up(&event);
@@ -66,7 +63,8 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	free_resources();
+	SDL_Quit();
+	free_debug();
 
 	return 0;
 }
@@ -74,7 +72,7 @@ int main(int argc, char *argv[]) {
 void setup_graphics(void) {
 	if(SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-		exit(10);
+		exit(11);
 	}
 
 	window = SDL_CreateWindow("CHIP-8 Emulator",
@@ -84,7 +82,7 @@ void setup_graphics(void) {
 													  SDL_WINDOW_SHOWN);
 	if(window == NULL) {
 		printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-		exit(11);
+		exit(12);
 	}
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -143,8 +141,6 @@ void key_down(SDL_Event *event) {
 		case SDLK_v:
 			keys[0xF] = true;
 			break;
-		case SDLK_ESCAPE:
-			quit = true;
 		case SDLK_u:
 			cpu.pc = PRG_ADDR;
 			memset(cpu.V, 0, sizeof(uint8_t) * 16);
@@ -223,14 +219,4 @@ void update_screen(void) {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 	SDL_RenderPresent(renderer);
-}
-
-
-void setup_ncurses(void) {
-	initscr();
-}
-
-void free_resources(void) {
-	endwin();
-	SDL_Quit();
 }

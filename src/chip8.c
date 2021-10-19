@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <ncurses.h>
 #include "chip8.h"
 
 CHIP8 cpu;
@@ -35,7 +34,7 @@ uint8_t sprite_addr[] = {0x050, 0x055, 0x05A, 0x05F,
 };
 
 /* Initialize processor registers and memory */
-void initialize_chip8(void) {
+void init_chip8(void) {
 	memset(cpu.V, 0, sizeof(uint8_t) * 16);															/* Reset general-purpose registers to 0 */
 	memset(cpu.stack, 0, sizeof(uint16_t) * 16);												/* Reset stack to 0 										*/
 	memset(memory, 0, MEM_SIZE * sizeof(uint8_t));											/* Reset CHIP-8 memory to 0 						*/
@@ -68,66 +67,22 @@ void copy_to_memory(FILE *fp) {
 		fread(memory + PRG_ADDR, sizeof(uint8_t), sz, fp);
 	else {
 		fprintf(stderr, "Game size exceeded free memory.\n");
-		exit(2);
+		exit(1);
 	}
 }
 
-void load_game(const char *n_game) {
+void load_rom(const char *n_game) {
 	FILE *fp;
 
 	if((fp = fopen(n_game, "rb")) == NULL) {
 		fprintf(stderr, "File not found\n");
-		exit(1);
+		exit(2);
 	}
 
 	copy_to_memory(fp);
 
 	fclose(fp);
 }
-
-#ifdef CHIP8_DBG
-void mem_debugger(size_t n) {
-	size_t i;
-
-	for(i=n; i<=MEM_SIZE; i++)
-		printw("%02X ", memory[i]);
-
-	addch('\n');
-}
-
-/* Views processor registers */
-void cpu_debugger(void) {
-	uint16_t next_op = memory[cpu.pc] << 8 | memory[cpu.pc + 1];
-
-	attron(A_BOLD);
-	addstr("Registers\n");
-	attroff(A_BOLD);
-
-	for(size_t i=0; i<4; i++)
-		printw("V%lX: %02X\t\tV%lX: %02X\t\tV%lX: %02X\t\tV%lX: %02X\n", i, cpu.V[i], i+0x4, cpu.V[i+0x4], i+0x8, cpu.V[i+0x8], i+0xC, cpu.V[i+0xC]);
-
-	attron(A_BOLD);
-	addstr("\nProcessor Status\n");
-	attroff(A_BOLD);
-
-	printw("PC: 0x%02X\tsp: 0x%X\n", cpu.pc, cpu.sp);
-	printw("I : 0x%02X\n", cpu.I);
-	printw("op: 0x%02X\tNext op.: 0x%02X\n", cpu.opcode, next_op);
-}
-
-void gfx_debugger(void) {
-	for(size_t i=0,j=0; i<SCREEN_WIDTH * SCREEN_HEIGHT; i++,j++) {
-		if(j == SCREEN_WIDTH) {
-			addch('\n');
-			j = 0;
-		}
-		if(gfx[i] == 0)
-			addch(' ');
-		else
-			printw("%x", gfx[i]);
-	}
-}
-#endif
 
 void draw_sprite(uint8_t x, uint8_t y, uint8_t height) {
 	uint8_t pixel;

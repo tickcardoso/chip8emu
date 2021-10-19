@@ -14,7 +14,7 @@
 	 * Only 3584 bytes of free memory to be used by program.
 	 */
 	#define FREE_MEM MEM_SIZE-PRG_ADDR
-	#define CHIP8_DBG
+	#define DEBUG
 
 	#define SCREEN_WIDTH 	64
 	#define SCREEN_HEIGHT 32
@@ -40,15 +40,10 @@
 	extern bool keys[16];
 
 	/* Function Declarations */
-	void initialize_chip8(void);
+	void init_chip8(void);
 	void emulate_cycle(void);
-
-#ifdef CHIP8_DBG
-	#include "chip8_dbg.h"
-#endif
-
 	long fsize(FILE *fp);
 	void copy_to_memory(FILE *fp);
-	void load_game(const char *n_game);
+	void load_rom(const char *n_game);
 
 #endif
