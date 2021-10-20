@@ -1,4 +1,8 @@
-#include <ncurses.h>
+#ifdef _WIN32
+	#include <curses.h>
+#else
+	#include <ncurses.h>
+#endif
 #include "chip8.h"
 
 void mem_debugger(size_t n) {
