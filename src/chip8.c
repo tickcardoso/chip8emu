@@ -144,6 +144,9 @@ void emulate_cycle(void) {
 					cpu.pc = cpu.stack[cpu.sp];
 					cpu.pc += 2;
 					break;
+				default:
+					fprintf(stderr, "Unknown opcode 0x%04X\n", cpu.opcode);
+					exit(3);
 			}
 			break;
 		case 0x1000:
@@ -248,6 +251,9 @@ void emulate_cycle(void) {
 					cpu.V[(cpu.opcode & 0x0F00) >> 8] <<= 1;
 					cpu.pc += 2;
 					break;
+				default:
+					fprintf(stderr, "Unknown opcode 0x%04X\n", cpu.opcode);
+					exit(3);
 			}
 			break;
 		case 0x9000:
@@ -294,6 +300,9 @@ void emulate_cycle(void) {
 					else
 						cpu.pc += 2;
 					break;
+				default:
+					fprintf(stderr, "Unknown opcode 0x%04X\n", cpu.opcode);
+					exit(3);
 			}
 			break;
 		case 0xF000:
@@ -382,10 +391,13 @@ void emulate_cycle(void) {
 					cpu.I += cpu.V[(cpu.opcode & 0x0F00) >> 8] + 1;
 					cpu.pc += 2;
 					break;
+				default:
+					fprintf(stderr, "Unknown opcode 0x04%X\n", cpu.opcode);
+					exit(3);
 			}
 			break;
 		default:
-			fprintf(stderr, "Unknown opcode 0x%X\n", cpu.opcode);
+			fprintf(stderr, "Unknown opcode 0x%04X\n", cpu.opcode);
 			exit(3);
 	}
 
