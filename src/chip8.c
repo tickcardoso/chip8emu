@@ -373,7 +373,7 @@ void emulate_cycle(void) {
 				/* Stores V0 to VX (including VX) in memory starting at address I.
 				 * The offset from I is increased by 1 for each value written,
 				 * but I itself is left unmodified. */
-					for(uint16_t i=0; i<=((cpu.opcode & 0x0F00) >> 8); i++)
+					for(size_t i=0; i<=((cpu.opcode & 0x0F00) >> 8); i++)
 						memory[cpu.I + i] = cpu.V[i];
 
 					/* On the original interpreter, when the operation is done, I = I + X + 1. */
@@ -384,7 +384,7 @@ void emulate_cycle(void) {
 					/* Fills V0 to VX (including VX) with values from memory starting at address I.
 					 * The offset from I is increased by 1 for each value written,
 					 * but I itself is left unmodified. */
-					for(uint16_t i=0; i<=((cpu.opcode & 0x0F00) >> 8); i++)
+					for(size_t i=0; i<=((cpu.opcode & 0x0F00) >> 8); i++)
 						cpu.V[i] = memory[cpu.I + i];
 
 					/* On the original interpreter, when the operation is done, I = I + X + 1. */
