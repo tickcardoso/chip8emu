@@ -60,6 +60,19 @@ long fsize(FILE *fp) {
 	return size;
 }
 
+bool is_file(const char *filename) {
+	const char *pos_ponto = strstr(filename, ".c8");
+
+	if(pos_ponto == NULL)
+		return false;
+	if(pos_ponto == filename)
+		return false;
+	if(*(pos_ponto+1) == '\0')
+		return false;
+
+	return true;
+}
+
 void copy_to_memory(FILE *fp) {
 	size_t sz = (size_t)fsize(fp);
 
@@ -74,9 +87,14 @@ void copy_to_memory(FILE *fp) {
 void load_rom(const char *n_game) {
 	FILE *fp;
 
+	if(!is_file(n_game)) {
+		fprintf(stderr, "File name doesn't match the pattern: filename.c8\n");
+		exit(2);
+	}
+
 	if((fp = fopen(n_game, "rb")) == NULL) {
 		fprintf(stderr, "File not found\n");
-		exit(2);
+		exit(3);
 	}
 
 	copy_to_memory(fp);
@@ -146,7 +164,7 @@ void emulate_cycle(void) {
 					break;
 				default:
 					fprintf(stderr, "Unknown opcode 0x%04X\n", cpu.opcode);
-					exit(3);
+					exit(4);
 			}
 			break;
 		case 0x1000:
@@ -253,7 +271,7 @@ void emulate_cycle(void) {
 					break;
 				default:
 					fprintf(stderr, "Unknown opcode 0x%04X\n", cpu.opcode);
-					exit(3);
+					exit(4);
 			}
 			break;
 		case 0x9000:
@@ -302,7 +320,7 @@ void emulate_cycle(void) {
 					break;
 				default:
 					fprintf(stderr, "Unknown opcode 0x%04X\n", cpu.opcode);
-					exit(3);
+					exit(4);
 			}
 			break;
 		case 0xF000:
@@ -393,12 +411,12 @@ void emulate_cycle(void) {
 					break;
 				default:
 					fprintf(stderr, "Unknown opcode 0x04%X\n", cpu.opcode);
-					exit(3);
+					exit(4);
 			}
 			break;
 		default:
 			fprintf(stderr, "Unknown opcode 0x%04X\n", cpu.opcode);
-			exit(3);
+			exit(4);
 	}
 
 	/* Update timers */
