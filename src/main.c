@@ -43,14 +43,11 @@ int main(int argc, char *argv[]) {
 		cpu_debugger();
 
 		while(SDL_PollEvent(&event)) {
-			if(event.type == SDL_QUIT)
+			if(event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
 				quit = true;
 			else
-				if(event.type == SDL_KEYDOWN) {
+				if(event.type == SDL_KEYDOWN)
 					key_down(&event);
-					if(event.key.keysym.sym == SDLK_ESCAPE)
-						quit = true;
-				}
 				else
 					if(event.type == SDL_KEYUP)
 						key_up(&event);
