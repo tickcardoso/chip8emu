@@ -179,24 +179,15 @@ void emulate_cycle(void) {
 			break;
 		case 0x3000:
 			/* 3XNN: Skips the next instruction if VX equals to NN. */
-			if(cpu.V[(cpu.opcode & 0x0F00) >> 8] == (cpu.opcode & 0x00FF))
-				cpu.pc += 4;
-			else
-				cpu.pc += 2;
+			cpu.pc += (cpu.V[(cpu.opcode & 0x0F00) >> 8] == (cpu.opcode & 0x00FF)) ? 4 : 2;
 			break;
 		case 0x4000:
 			/* 4XNN: Skips the next instruction if VX does not equal NN. */
-			if(cpu.V[(cpu.opcode & 0x0F00) >> 8] != (cpu.opcode & 0x00FF))
-				cpu.pc += 4;
-			else
-				cpu.pc += 2;
+			cpu.pc += (cpu.V[(cpu.opcode & 0x0F00) >> 8] != (cpu.opcode & 0x00FF)) ? 4 : 2;
 			break;
 		case 0x5000:
 			/* 5XY0: Skips the next instruction if VX equals VY. */
-			if(cpu.V[(cpu.opcode & 0x0F00) >> 8] == cpu.V[(cpu.opcode & 0x00F0) >> 4])
-				cpu.pc += 4;
-			else
-				cpu.pc += 2;
+			cpu.pc += (cpu.V[(cpu.opcode & 0x0F00) >> 8] == cpu.V[(cpu.opcode & 0x00F0) >> 4]) ? 4 : 2;
 			break;
 		case 0x6000:
 			/* 6XNN: Sets VX to NN */
@@ -276,10 +267,7 @@ void emulate_cycle(void) {
 			break;
 		case 0x9000:
 			/* 9XY0: Skips the next instruction if VX does not equal VY. */
-			if(cpu.V[(cpu.opcode & 0x0F00) >> 8] != cpu.V[(cpu.opcode & 0x00F0) >> 4])
-				cpu.pc += 4;
-			else
-				cpu.pc += 2;
+			cpu.pc += (cpu.V[(cpu.opcode & 0x0F00) >> 8] != cpu.V[(cpu.opcode & 0x00F0) >> 4]) ? 4 : 2;
 			break;
 		case 0xA000:
 			/* ANNN: Sets I (address register) to the address NNN */
@@ -306,17 +294,11 @@ void emulate_cycle(void) {
 			switch(cpu.opcode & 0x00FF) {
 				case 0x009E:
 					/* EX9E: Skips the next instruction if the key stored in VX is pressed. */
-					if(keys[cpu.V[(cpu.opcode & 0x0F00) >> 8]] == true)
-						cpu.pc += 4;
-					else
-						cpu.pc += 2;
+					cpu.pc += (keys[cpu.V[(cpu.opcode & 0x0F00) >> 8]] == true) ? 4 : 2;
 					break;
 				case 0x00A1:
 					/* EXA1: Skips the next instruction if the key stored in VX is not pressed. */
-					if(keys[cpu.V[(cpu.opcode & 0x0F00) >> 8]] == false)
-						cpu.pc += 4;
-					else
-						cpu.pc += 2;
+					cpu.pc += (keys[cpu.V[(cpu.opcode & 0x0F00) >> 8]] == false) ? 4 : 2;
 					break;
 				default:
 					fprintf(stderr, "Unknown opcode 0x%04X\n", cpu.opcode);
