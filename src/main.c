@@ -20,6 +20,7 @@ void key_down(SDL_Event *event);
 void key_up(SDL_Event *event);
 void setup_audio(void);
 void update_screen(void);
+void destroy_emu(void);
 
 int main(int argc, char *argv[]) {
 	bool quit = false;
@@ -60,7 +61,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	SDL_Quit();
+	destroy_emu();
 	free_debug();
 
 	return 0;
@@ -216,4 +217,8 @@ void update_screen(void) {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 	SDL_RenderPresent(renderer);
+}
+
+void destroy_emu(void) {
+  SDL_Quit();
 }
