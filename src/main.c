@@ -59,6 +59,8 @@ int main(int argc, char *argv[]) {
 
 			update_screen();
 		}
+
+		cpu.cycle_count++;
 	}
 
 	destroy_emu();

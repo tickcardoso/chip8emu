@@ -42,6 +42,7 @@ void init_chip8(void) {
 	memset(gfx, 0, sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);			/* Reset internal display							  */
 	memcpy(memory + 0x50, fontset, sizeof(fontset)/sizeof(*fontset));		/* Copy fontset to memory 						  */
 
+  cpu.cycle_count = 0;
 	cpu.I 	= cpu.opcode = cpu.sp = 0;
 	cpu.pc 	= PRG_ADDR;
 	cpu.delay_timer = cpu.sound_timer = 0;

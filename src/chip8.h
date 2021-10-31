@@ -21,6 +21,7 @@
 
 	/* Structures */
 	typedef struct {
+    uint32_t cycle_count;
 		uint16_t I;
 		uint16_t pc;
 		uint16_t stack[16];

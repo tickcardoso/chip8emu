@@ -154,8 +154,8 @@ void cpu_debugger(void) {
 	addstr("\nProcessor Status\n");
 	attroff(A_BOLD);
 
-	printw("PC: 0x%02X\tsp: 0x%X\n", cpu.pc, cpu.sp);
-	printw("I : 0x%02X\n", cpu.I);
+	printw("PC: 0x%02X\tsp: 0x%X\t\tI: 0x%02X\n", cpu.pc, cpu.sp, cpu.I);
+  printw("Cycles: %lu\n", cpu.cycle_count);
 
 	printw("op: ");
 	disassembler(cpu.opcode);
