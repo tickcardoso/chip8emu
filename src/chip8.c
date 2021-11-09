@@ -33,21 +33,28 @@ uint8_t sprite_addr[] = {0x050, 0x055, 0x05A, 0x05F,
 												 0x08C, 0x091, 0x096, 0x09B
 };
 
+/* Soft reset CHIP-8 function */
+void reset_chip8(void) {
+  memset(gfx, 0, sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
+  cpu.pc = PRG_ADDR;
+  cpu.draw_flag = true;
+}
+
 /* Initialize processor registers and memory */
 void init_chip8(void) {
 	memset(cpu.V, 0, sizeof(uint8_t) * 16);															/* Reset general-purpose registers to 0 */
 	memset(cpu.stack, 0, sizeof(uint16_t) * 16);												/* Reset stack to 0 										*/
 	memset(memory, 0, MEM_SIZE * sizeof(uint8_t));											/* Reset CHIP-8 memory to 0 						*/
 	memset(keys, 0, sizeof(bool) * 16);																	/* Reset keys													  */
-	memset(gfx, 0, sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);			/* Reset internal display							  */
 	memcpy(memory + 0x50, fontset, sizeof(fontset)/sizeof(*fontset));		/* Copy fontset to memory 						  */
 
   cpu.cycle_count = 0;
 	cpu.I 	= cpu.opcode = cpu.sp = 0;
-	cpu.pc 	= PRG_ADDR;
 	cpu.delay_timer = cpu.sound_timer = 0;
-	cpu.draw_flag = true;
+
+  reset_chip8();
 }
+
 
 /* Get file size */
 long fsize(FILE *fp) {

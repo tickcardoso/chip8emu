@@ -41,6 +41,7 @@
 	extern bool keys[16];
 
 	/* Function Declarations */
+  void reset_chip8(void);
 	void init_chip8(void);
 	void emulate_cycle(void);
 	long fsize(FILE *fp);

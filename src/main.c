@@ -142,10 +142,7 @@ void key_down(SDL_Event *event) {
 			keys[0xF] = true;
 			break;
 		case SDLK_u:
-			cpu.pc = PRG_ADDR;
-			memset(cpu.V, 0, sizeof(uint8_t) * 16);
-			memset(gfx, 0, sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
-			cpu.draw_flag = true;
+			reset_chip8();
 	}
 }
 
