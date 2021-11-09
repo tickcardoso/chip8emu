@@ -222,5 +222,9 @@ void update_screen(void) {
 }
 
 void destroy_emu(void) {
+  SDL_DestroyTexture(texture);
+  SDL_DestroyRenderer(renderer);
+  SDL_DestroyWindow(window);
+
   SDL_Quit();
 }
