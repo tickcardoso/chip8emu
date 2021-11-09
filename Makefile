@@ -6,7 +6,7 @@ SRC_DIRS := ./src
 
 CC := gcc
 CFLAGS := -std=c99 -Wall -pedantic-errors
-LDFLAGS := -lSDL2 -lncurses
+LDFLAGS := -lm -lSDL2 -lncurses
 
 # Find all the C files we want to compile
 # Note the single quotes around the * expressions. Make will incorrectly expand these otherwise.
